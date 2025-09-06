@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MapPin, MapPinOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import TheaterSelector from "@/components/TheaterSelector";
 import TicketCounter from "@/components/TicketCounter";
@@ -26,9 +28,63 @@ export default function PreBookForm() {
   const [selectedTheaters, setSelectedTheaters] = useState<string[]>([]);
   const [ticketCount, setTicketCount] = useState(2);
   const [seatPreference, setSeatPreference] = useState("adjacent");
+  const [seatRowPreference, setSeatRowPreference] = useState("any");
   const [timeRange, setTimeRange] = useState(18);
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [upiId, setUpiId] = useState("");
+  const [userLocation, setUserLocation] = useState<any>(null);
+  const [locationPermission, setLocationPermission] = useState<string>("pending");
+
+  // Request location permission on component mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            city: "Current Location" // In real app, reverse geocode to get city
+          });
+          setLocationPermission("granted");
+        },
+        (error) => {
+          console.error("Location error:", error);
+          setLocationPermission("denied");
+        },
+        { timeout: 10000 }
+      );
+    } else {
+      setLocationPermission("not_supported");
+    }
+  }, []);
+
+  const requestLocationPermission = () => {
+    if (navigator.geolocation) {
+      setLocationPermission("pending");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            city: "Current Location"
+          });
+          setLocationPermission("granted");
+          toast({
+            title: "Location Access Granted",
+            description: "We can now show nearby theaters first!",
+          });
+        },
+        (error) => {
+          setLocationPermission("denied");
+          toast({
+            title: "Location Access Denied",
+            description: "You can still select theaters manually.",
+            variant: "destructive",
+          });
+        }
+      );
+    }
+  };
 
   const createPreBookingMutation = useMutation({
     mutationFn: async (data: InsertPreBooking) => {
@@ -123,9 +179,11 @@ export default function PreBookForm() {
       ticketCount,
       selectedTheaters,
       seatPreference,
+      seatRowPreference,
       timeRange: formatTime(timeRange),
       selectedDates,
       upiId: upiId.trim(),
+      userLocation,
     };
 
     createPreBookingMutation.mutate(preBookingData);
@@ -197,6 +255,60 @@ export default function PreBookForm() {
                 <Label htmlFor="split">Allow split seating</Label>
               </div>
             </RadioGroup>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium mb-4">Seat Row Preference</label>
+            <Select value={seatRowPreference} onValueChange={setSeatRowPreference}>
+              <SelectTrigger data-testid="seat-row-selector">
+                <SelectValue placeholder="Select row preference" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="front">Front Rows (A-E)</SelectItem>
+                <SelectItem value="middle">Middle Rows (F-L)</SelectItem>
+                <SelectItem value="back">Back Rows (M-Z)</SelectItem>
+                <SelectItem value="any">Any Row</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-4">Location for Nearby Theaters</label>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 border border-border rounded-lg">
+                <div className="flex items-center space-x-2">
+                  {locationPermission === "granted" ? (
+                    <MapPin className="h-5 w-5 text-green-400" />
+                  ) : (
+                    <MapPinOff className="h-5 w-5 text-muted-foreground" />
+                  )}
+                  <span className="text-sm">
+                    {locationPermission === "granted" && "Location Access Granted"}
+                    {locationPermission === "denied" && "Location Access Denied"}
+                    {locationPermission === "pending" && "Requesting Location..."}
+                    {locationPermission === "not_supported" && "Location Not Supported"}
+                  </span>
+                </div>
+                {locationPermission === "denied" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={requestLocationPermission}
+                    data-testid="button-request-location"
+                  >
+                    Enable
+                  </Button>
+                )}
+              </div>
+              {locationPermission === "granted" && (
+                <p className="text-xs text-muted-foreground">
+                  We'll prioritize theaters near your location
+                </p>
+              )}
+            </div>
           </div>
         </div>
 

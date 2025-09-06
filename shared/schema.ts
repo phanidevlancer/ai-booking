@@ -16,9 +16,11 @@ export const preBookings = pgTable("pre_bookings", {
   ticketCount: integer("ticket_count").notNull(),
   selectedTheaters: jsonb("selected_theaters").notNull(), // array of theater names
   seatPreference: text("seat_preference").notNull(), // "adjacent" or "split"
+  seatRowPreference: text("seat_row_preference").notNull(), // "front", "middle", "back", "any"
   timeRange: text("time_range").notNull(),
   selectedDates: jsonb("selected_dates").notNull(), // array of date strings
   upiId: text("upi_id").notNull(),
+  userLocation: jsonb("user_location"), // {latitude, longitude, city} or null if permission denied
   status: text("status").notNull().default("pending"), // pending, searching, match_found, confirmed
   createdAt: timestamp("created_at").defaultNow().notNull(),
   matchDetails: jsonb("match_details"), // seat details, theater, time when match found
