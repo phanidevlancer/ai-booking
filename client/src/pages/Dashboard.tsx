@@ -55,7 +55,7 @@ export default function Dashboard() {
         seats: ["J7", "J8", "J9"].slice(0, booking.ticketCount),
         price: booking.ticketCount * 220,
         serviceFee: 45,
-        total: booking.ticketCount * 220 + 45 - 50, // minus pre-booking fee
+        total: booking.ticketCount * 220 + 45 - (booking.ticketCount * 50), // minus pre-booking fee
       };
 
       try {

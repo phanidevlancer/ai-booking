@@ -18,8 +18,8 @@ export default function Confirmation() {
         
         <div className="space-y-4 mb-8">
           <div className="flex justify-between items-center py-2 border-b border-border">
-            <span className="text-muted-foreground">Pre-booking Fee:</span>
-            <span className="font-medium text-primary">₹50</span>
+            <span className="text-muted-foreground">Pre-booking Fee (per ticket):</span>
+            <span className="font-medium text-primary">₹50 each</span>
           </div>
         </div>
 

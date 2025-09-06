@@ -142,7 +142,7 @@ export default function MatchFound() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Pre-booking Fee (Paid)</span>
-                <span className="text-green-400">-₹50</span>
+                <span className="text-green-400">-₹{booking.ticketCount * 50}</span>
               </div>
               <hr className="border-border" />
               <div className="flex justify-between font-semibold text-lg">

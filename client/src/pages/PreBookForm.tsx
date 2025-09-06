@@ -231,7 +231,7 @@ export default function PreBookForm() {
           >
             {createPreBookingMutation.isPending 
               ? "Processing..." 
-              : "Pay Pre-Booking Fee - ₹50"
+              : `Pay Pre-Booking Fee - ₹${ticketCount * 50}`
             }
           </Button>
         </div>
