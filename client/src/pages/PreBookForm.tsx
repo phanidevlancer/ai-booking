@@ -29,7 +29,7 @@ export default function PreBookForm() {
   const [ticketCount, setTicketCount] = useState(2);
   const [seatPreference, setSeatPreference] = useState("adjacent");
   const [seatRowPreference, setSeatRowPreference] = useState("any");
-  const [timeRange, setTimeRange] = useState(18);
+  const [timeRange, setTimeRange] = useState(12);
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [upiId, setUpiId] = useState("");
   const [userLocation, setUserLocation] = useState<any>(null);
