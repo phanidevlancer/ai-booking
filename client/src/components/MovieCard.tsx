@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import type { Movie } from "@/data/movies";
 
 interface MovieCardProps {
@@ -7,15 +8,27 @@ interface MovieCardProps {
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div className="movie-card bg-white rounded-2xl overflow-hidden border border-gray-100" data-testid={`movie-card-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}>
       <div className="relative">
-        <img 
-          src={movie.poster} 
-          alt={`${movie.title} movie poster`}
-          className="w-full h-80 object-cover"
-          data-testid={`movie-poster-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
-        />
+        {imageError ? (
+          <div className="w-full h-80 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🎬</div>
+              <p className="text-gray-500 text-sm font-medium">{movie.title}</p>
+            </div>
+          </div>
+        ) : (
+          <img 
+            src={movie.poster} 
+            alt={`${movie.title} movie poster`}
+            className="w-full h-80 object-cover"
+            onError={() => setImageError(true)}
+            data-testid={`movie-poster-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
+          />
+        )}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700">
           {movie.year}
         </div>
