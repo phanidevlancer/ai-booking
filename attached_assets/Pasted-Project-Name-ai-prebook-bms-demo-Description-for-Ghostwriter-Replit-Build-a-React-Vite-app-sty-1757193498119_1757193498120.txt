@@ -1,0 +1,113 @@
+Project Name: ai-prebook-bms-demo
+
+Description for Ghostwriter / Replit
+Build a React + Vite app styled like BookMyShow (dark theme, card-based layout). The app should show upcoming movies with real posters, each card having two CTAs:
+
+“Book Now” → (just placeholder, normal flow)
+
+“AI Pre-Book” → Opens our AI-powered pre-booking form
+
+Requirements
+
+UI Theme:
+
+Dark background (#121212) with red (#E50914) as accent color (similar to BookMyShow).
+
+Movie posters in a grid (3–4 columns).
+
+Rounded cards with hover effect.
+
+Movie Data:
+Use real posters + titles (hardcode them as dummy data). Example:
+
+“Deadpool & Wolverine” (poster: https://image.tmdb.org/t/p/w500/hPtPOA0RTnV6hO5v3hF1rUuRtnO.jpg)
+
+“Inside Out 2” (poster: https://image.tmdb.org/t/p/w500/djhPTGoBsq0hwg5r3Iqh9CzRBY0.jpg)
+
+“Pushpa 2” (poster: https://image.tmdb.org/t/p/w500/84nmyqRQltOelF8RoqfoBx3Y7cY.jpg)
+
+“Kalki 2898 AD” (poster: https://image.tmdb.org/t/p/w500/eoNRk8r2raXI5Qun7qY5T2r8j04.jpg)
+
+Pages & Flow:
+
+Home (Upcoming Movies)
+
+Grid of movie posters with name & release date.
+
+Buttons: “Book Now” and “AI Pre-Book”.
+
+AI Pre-Book Form
+
+Selected movie header (poster + title).
+
+Fields:
+
+Multi-select theaters (use dummy theater names like PVR Forum Mall, INOX GVK One, etc.).
+
+Tickets count (stepper).
+
+Seat preference (adjacent / allow split).
+
+Time range selector (slider 9:00 → 23:30).
+
+Dates (multi-select calendar).
+
+UPI ID input.
+
+CTA: “Pay Pre-Booking Fee” → goes to confirmation screen.
+
+Pre-Booking Confirmation
+
+Success message: “Your pre-booking is confirmed! We’ll notify you once seats are found.”
+
+Buttons: View My Pre-Bookings | Back to Home.
+
+Dashboard (My Pre-Bookings)
+
+Shows list of pre-bookings with statuses: Pending, Searching, Match Found, Confirmed.
+
+Admin toggle: “Open bookings for this movie” (simulates release).
+
+If match found → Show “View Match”.
+
+Match Found Screen
+
+Seat map screenshot placeholder.
+
+Movie details, theater, date, time.
+
+Price breakdown (tickets + service fee).
+
+QR Code (generated with qrcode npm lib).
+
+Buttons: Pay & Confirm | Not Interested | Try Other Theaters.
+
+Booking Confirmed Screen
+
+Final e-ticket with QR code + ticket details.
+
+Automation (Dummy):
+
+Background job (setInterval) checks if “bookings open” toggle is ON.
+
+If so, generate fake seat allocation and mark as “Match Found”.
+
+Packages to install:
+
+react-router-dom for navigation
+
+qrcode.react for QR codes
+
+tailwindcss for styling
+
+Style Guide (BookMyShow-like):
+
+Dark theme (bg-[#121212] text-white)
+
+Movie titles in bold white, secondary text in gray
+
+Red buttons (bg-red-600 hover:bg-red-700) for primary actions
+
+Rounded poster cards with hover scale effect
+
+Consistent spacing (use Tailwind grid & flex utilities)
