@@ -20,13 +20,13 @@ export const MOVIES: Movie[] = [
   },
   {
     title: "Pushpa 2",
-    poster: "https://image.tmdb.org/t/p/w500/dHJhXOOCVGjlI2H5utkUFHdCZOr.jpg",
+    poster: "https://image.tmdb.org/t/p/w500/84nmyqRQltOelF8RoqfoBx3Y7cY.jpg",
     genre: "Action, Drama",
     year: "2024"
   },
   {
     title: "Kalki 2898 AD",
-    poster: "https://image.tmdb.org/t/p/w500/jANKHeTTymZWJt2dNAv4BNg4K3o.jpg",
+    poster: "https://image.tmdb.org/t/p/w500/eoNRk8r2raXI5Qun7qY5T2r8j04.jpg",
     genre: "Sci-Fi, Action",
     year: "2024"
   }
