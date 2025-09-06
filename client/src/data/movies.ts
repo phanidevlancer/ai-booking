@@ -20,13 +20,13 @@ export const MOVIES: Movie[] = [
   },
   {
     title: "Pushpa 2",
-    poster: "https://picsum.photos/400/600?random=3",
+    poster: "https://m.media-amazon.com/images/M/MV5BZjllNTdiM2QtYjQ0Ni00ZGM1LWFlYmUtNWY0YjMzYWIxOTYxXkEyXkFqcGc@._V1_.jpg",
     genre: "Action, Drama",
     year: "2024"
   },
   {
     title: "Kalki 2898 AD",
-    poster: "https://picsum.photos/400/600?random=4",
+    poster: "https://m.media-amazon.com/images/M/MV5BMTM3ZGUwYTEtZTI5NS00ZmMyLTk2YmQtMWU4YjlhZTI3NjRjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
     genre: "Sci-Fi, Action",
     year: "2024"
   }
