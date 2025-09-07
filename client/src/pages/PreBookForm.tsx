@@ -39,6 +39,31 @@ export default function PreBookForm() {
     window.scrollTo(0, 0);
   }, [movieTitle]);
 
+  // Get user location on component mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // For now, we'll set a default city. In a real app, you'd use reverse geocoding
+          setUserLocation({
+            latitude,
+            longitude,
+            city: "Hyderabad" // Default city, could be determined via reverse geocoding API
+          });
+        },
+        (error) => {
+          console.warn("Geolocation error:", error);
+          // Set null if permission denied or error occurs
+          setUserLocation(null);
+        }
+      );
+    } else {
+      console.warn("Geolocation is not supported by this browser.");
+      setUserLocation(null);
+    }
+  }, []);
+
   const [selectedTheaters, setSelectedTheaters] = useState<string[]>([]);
   const [selectedCities, setSelectedCities] = useState<string[]>(["Hyderabad"]); // Default to Hyderabad
   const [ticketCount, setTicketCount] = useState(2);
@@ -49,6 +74,7 @@ export default function PreBookForm() {
   const [upiId, setUpiId] = useState("");
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [userLocation, setUserLocation] = useState<{latitude: number, longitude: number, city: string} | null>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
 
   // Calculate dynamic pre-booking fee based on movie-specific pricing configuration
