@@ -14,9 +14,13 @@ export default function TicketCounter({ ticketCount, onChangeTicketCount }: Tick
         <Button
           variant="secondary"
           size="icon"
-          onClick={() => onChangeTicketCount(-1)}
+          onClick={(e) => {
+            e.preventDefault(); // Prevent form submission
+            onChangeTicketCount(-1);
+          }}
           disabled={ticketCount <= 1}
           data-testid="button-decrease-tickets"
+          type="button" // Explicitly set button type to prevent form submission
         >
           <Minus className="h-4 w-4" />
         </Button>
@@ -29,9 +33,13 @@ export default function TicketCounter({ ticketCount, onChangeTicketCount }: Tick
         <Button
           variant="secondary"
           size="icon"
-          onClick={() => onChangeTicketCount(1)}
+          onClick={(e) => {
+            e.preventDefault(); // Prevent form submission
+            onChangeTicketCount(1);
+          }}
           disabled={ticketCount >= 10}
           data-testid="button-increase-tickets"
+          type="button" // Explicitly set button type to prevent form submission
         >
           <Plus className="h-4 w-4" />
         </Button>
