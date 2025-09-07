@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, MapPinOff, ChevronUp, ChevronDown } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import TheaterSelector from "@/components/TheaterSelector";
+import CitySelector from "@/components/CitySelector";
 import TicketCounter from "@/components/TicketCounter";
 import { Slider } from "@/components/ui/slider";
 import DateSelector from "@/components/DateSelector";
@@ -34,6 +35,7 @@ export default function PreBookForm() {
   const movie = MOVIES.find(m => m.title === movieTitle);
 
   const [selectedTheaters, setSelectedTheaters] = useState<string[]>([]);
+  const [selectedCities, setSelectedCities] = useState<string[]>(["Hyderabad"]); // Default to Hyderabad
   const [ticketCount, setTicketCount] = useState(2);
   const [seatPreference, setSeatPreference] = useState("adjacent");
   const [seatRowPreference, setSeatRowPreference] = useState("any");
@@ -213,6 +215,12 @@ export default function PreBookForm() {
     );
   };
 
+  const handleSelectCity = (cityValue: string) => {
+    setSelectedCities([cityValue]); // Only allow single city selection
+    // Clear selected theaters when city changes to avoid invalid selections
+    setSelectedTheaters([]);
+  };
+
   const handleChangeTicketCount = (delta: number) => {
     setTicketCount(prev => Math.max(1, Math.min(10, prev + delta)));
   };
@@ -352,10 +360,16 @@ export default function PreBookForm() {
       </div>
 
       <form id="prebook-form" onSubmit={handleSubmit} className="bg-card rounded-lg p-6 space-y-8">
-        <TheaterSelector
-          selectedTheaters={selectedTheaters}
-          onToggleTheater={handleToggleTheater}
-        />
+        <CitySelector
+                selectedCities={selectedCities}
+                onSelectCity={handleSelectCity}
+              />
+              
+              <TheaterSelector
+                selectedTheaters={selectedTheaters}
+                onToggleTheater={handleToggleTheater}
+                selectedCities={selectedCities}
+              />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <TicketCounter
