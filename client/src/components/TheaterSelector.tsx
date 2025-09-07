@@ -86,6 +86,7 @@ export default function TheaterSelector({ selectedTheaters, onToggleTheater, sel
           )}
         </label>
         <Button
+          type="button"
           variant="outline"
           size="sm"
           onClick={() => setShowAll(!showAll)}
@@ -129,6 +130,7 @@ export default function TheaterSelector({ selectedTheaters, onToggleTheater, sel
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
+                      type="button"
                       variant="ghost"
                       size="sm"
                       className="text-xs h-6 px-2"
@@ -205,6 +207,7 @@ export default function TheaterSelector({ selectedTheaters, onToggleTheater, sel
               Selected {totalSelected} theater{totalSelected !== 1 ? 's' : ''}
             </span>
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               className="text-xs h-6 px-2 text-primary hover:text-primary"
