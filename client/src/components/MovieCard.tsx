@@ -9,6 +9,34 @@ interface MovieCardProps {
 
 export default function MovieCard({ movie }: MovieCardProps) {
   const [imageError, setImageError] = useState(false);
+  
+  const handleSmartBookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Store movie data for shared element animation
+    const movieData = {
+      title: movie.title,
+      poster: movie.poster,
+      year: movie.year,
+      genre: movie.genre,
+      releaseDate: movie.releaseDate
+    };
+    sessionStorage.setItem('sharedElementMovie', JSON.stringify(movieData));
+    
+    // Add animation class to trigger shared element transition
+    const posterElement = document.querySelector(`[data-movie-poster="${movie.title}"]`) as HTMLElement;
+    if (posterElement) {
+      posterElement.classList.add('shared-element-exit');
+      
+      // Navigate after animation completes
+      setTimeout(() => {
+        window.location.href = `/prebook/${encodeURIComponent(movie.title)}`;
+      }, 500);
+    } else {
+      // Fallback if poster element not found
+      window.location.href = `/prebook/${encodeURIComponent(movie.title)}`;
+    }
+  };
 
   return (
     <div className="movie-card bg-white rounded-2xl overflow-hidden border border-gray-100" data-testid={`movie-card-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}>
@@ -24,9 +52,10 @@ export default function MovieCard({ movie }: MovieCardProps) {
           <img 
             src={movie.poster} 
             alt={`${movie.title} movie poster`}
-            className="w-full h-80 object-cover"
+            className="w-full h-80 object-cover transition-transform duration-500 ease-out"
             onError={() => setImageError(true)}
             data-testid={`movie-poster-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
+            data-movie-poster={movie.title}
           />
         )}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700">
@@ -53,6 +82,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
             <Button 
               className="w-full bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90 text-white font-semibold shadow-lg"
               data-testid={`button-ai-prebook-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
+              onClick={handleSmartBookClick}
             >
               ✨ SmartBook
             </Button>

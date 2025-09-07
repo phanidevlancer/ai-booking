@@ -81,6 +81,56 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Shared element animation styles */
+.shared-element-exit {
+  animation: sharedElementExit 0.5s ease-out forwards;
+}
+
+.shared-element-enter {
+  animation: sharedElementEnter 0.6s ease-out forwards;
+}
+
+@keyframes sharedElementExit {
+  0% {
+    transform: scale(1) rotate(0deg) translateZ(0);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg) translateZ(0);
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scale(0.6) rotate(15deg) translateZ(0);
+    opacity: 0;
+    filter: brightness(0.5);
+  }
+}
+
+@keyframes sharedElementEnter {
+  0% {
+    transform: scale(3) rotate(-20deg) translateZ(0);
+    opacity: 0;
+    filter: blur(4px) brightness(2);
+  }
+  30% {
+    transform: scale(2) rotate(-10deg) translateZ(0);
+    opacity: 0.3;
+    filter: blur(2px) brightness(1.5);
+  }
+  70% {
+    transform: scale(1.2) rotate(2deg) translateZ(0);
+    opacity: 0.8;
+    filter: blur(0px) brightness(1.1);
+  }
+  100% {
+    transform: scale(1) rotate(0deg) translateZ(0);
+    opacity: 1;
+    filter: blur(0px) brightness(1);
+  }
+}
+
 .hero-gradient {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 25%, #ff9ff3 50%, #54a0ff 75%, #5f27cd 100%);
   background-size: 400% 400%;
