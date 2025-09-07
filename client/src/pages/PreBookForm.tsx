@@ -8,7 +8,7 @@ import { MapPin, MapPinOff, ChevronUp, ChevronDown } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import TheaterSelector from "@/components/TheaterSelector";
 import TicketCounter from "@/components/TicketCounter";
-import TimeRangeSlider from "@/components/TimeRangeSlider";
+import { Slider } from "@/components/ui/slider";
 import DateSelector from "@/components/DateSelector";
 import { MOVIES } from "@/data/movies";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ export default function PreBookForm() {
   const [ticketCount, setTicketCount] = useState(2);
   const [seatPreference, setSeatPreference] = useState("adjacent");
   const [seatRowPreference, setSeatRowPreference] = useState("any");
-  const [timeRange, setTimeRange] = useState(12);
+  const [timeRange, setTimeRange] = useState([9, 21]); // 9 AM to 9 PM
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [upiId, setUpiId] = useState("");
   const [userLocation, setUserLocation] = useState<any>(null);
@@ -256,13 +256,7 @@ export default function PreBookForm() {
       return;
     }
 
-    const formatTime = (value: number) => {
-      const hour = Math.floor(value);
-      const minute = Math.round((value % 1) * 60);
-      return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-    };
-
-    // Log the data being submitted
+     // Log the data being submitted
     console.log("Submitting pre-booking with:", {
       movieTitle: movie.title,
       moviePoster: movie.poster,
@@ -271,7 +265,7 @@ export default function PreBookForm() {
       seatPreference,
       seatRowPreference,
       timeRange,
-      formattedTimeRange: formatTime(timeRange),
+        formattedTimeRange: `${timeRange[0].toString().padStart(2, '0')}:00 - ${timeRange[1].toString().padStart(2, '0')}:00`,
       selectedDates,
       upiId: upiId.trim(),
       userLocation,
@@ -286,7 +280,7 @@ export default function PreBookForm() {
         selectedTheaters: selectedTheaters.length > 0 ? selectedTheaters : [],
         seatPreference,
         seatRowPreference,
-        timeRange: formatTime(timeRange),
+        timeRange: `${timeRange[0].toString().padStart(2, '0')}:00 - ${timeRange[1].toString().padStart(2, '0')}:00`,
         selectedDates: selectedDates.length > 0 ? selectedDates : [],
         upiId: upiId.trim(),
         userLocation,
@@ -432,10 +426,31 @@ export default function PreBookForm() {
           </div>
         </div>
 
-        <TimeRangeSlider
-          timeRange={timeRange}
-          onTimeRangeChange={setTimeRange}
-        />
+        <div className="space-y-4">
+          <label className="block text-sm font-medium">Preferred Time Range</label>
+          <div className="px-4">
+            <Slider
+              value={timeRange}
+              onValueChange={setTimeRange}
+              max={24}
+              min={0}
+              step={1}
+              className="w-full"
+              data-testid="time-range-slider"
+            />
+            <div className="flex justify-between text-sm text-muted-foreground mt-2">
+              <span>12:00 AM</span>
+              <span>12:00 PM</span>
+              <span>11:59 PM</span>
+            </div>
+            <div className="text-center mt-3">
+              <span className="text-sm text-muted-foreground">Selected: </span>
+              <span className="font-medium" data-testid="time-range-display">
+                {timeRange[0].toString().padStart(2, '0')}:00 - {timeRange[1].toString().padStart(2, '0')}:00
+              </span>
+            </div>
+          </div>
+        </div>
 
         <DateSelector
           selectedDates={selectedDates}
