@@ -71,20 +71,20 @@ export default function DateSelector({ selectedDates, onToggleDate, movieRelease
     <div className="mb-6">
       <label className="block text-sm font-medium mb-4">Select Dates</label>
       <div className="w-full">
-        <div className="grid grid-cols-7 gap-2 mb-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
           {dayHeaders.map(day => (
-            <div key={day} className="w-14 h-8 flex items-center justify-center text-xs text-muted-foreground font-medium">
+            <div key={day} className="w-10 sm:w-14 h-8 flex items-center justify-center text-xs text-muted-foreground font-medium">
               {day}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {dates.map(({ date, day, month, fullDate }) => {
             const fee = calculateFeeForDate(date);
             return (
               <div
                 key={date}
-                className={`calendar-day w-14 h-16 flex flex-col items-center justify-center rounded-lg cursor-pointer text-xs border border-border transition-all duration-200 hover:shadow-md ${
+                className={`calendar-day w-10 sm:w-14 h-14 sm:h-16 flex flex-col items-center justify-center rounded-lg cursor-pointer text-xs border border-border transition-all duration-200 hover:shadow-md ${
                   selectedDates.includes(date) ? 'selected' : 'hover:bg-muted/50'
                 }`}
                 onClick={() => onToggleDate(date)}
