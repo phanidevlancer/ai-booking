@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { Movie } from "@/data/movies";
@@ -9,33 +9,26 @@ interface MovieCardProps {
 
 export default function MovieCard({ movie }: MovieCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [, setLocation] = useLocation();
   
   const handleSmartBookClick = (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Store movie data for shared element animation
-    const movieData = {
-      title: movie.title,
-      poster: movie.poster,
-      year: movie.year,
-      genre: movie.genre,
-      releaseDate: movie.releaseDate
-    };
-    sessionStorage.setItem('sharedElementMovie', JSON.stringify(movieData));
+    // Save current scroll position
+    const currentScrollY = window.scrollY;
+    sessionStorage.setItem('homeScrollPosition', currentScrollY.toString());
     
-    // Add animation class to trigger shared element transition
-    const posterElement = document.querySelector(`[data-movie-poster="${movie.title}"]`) as HTMLElement;
-    if (posterElement) {
-      posterElement.classList.add('shared-element-exit');
-      
-      // Navigate after animation completes
-      setTimeout(() => {
-        window.location.href = `/prebook/${encodeURIComponent(movie.title)}`;
-      }, 500);
-    } else {
-      // Fallback if poster element not found
-      window.location.href = `/prebook/${encodeURIComponent(movie.title)}`;
-    }
+    // Navigate to prebook form (will start at top)
+    setLocation(`/prebook/${encodeURIComponent(movie.title)}`);
+  };
+  
+  const handleBookNowClick = () => {
+    // Save current scroll position
+    const currentScrollY = window.scrollY;
+    sessionStorage.setItem('homeScrollPosition', currentScrollY.toString());
+    
+    // Navigate to prebook form (will start at top)
+    setLocation(`/prebook/${encodeURIComponent(movie.title)}`);
   };
 
   return (
@@ -75,18 +68,17 @@ export default function MovieCard({ movie }: MovieCardProps) {
             variant="outline" 
             className="w-full font-semibold border-gray-200 hover:bg-gray-50"
             data-testid={`button-book-now-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
+            onClick={handleBookNowClick}
           >
             Book Now
           </Button>
-          <Link href={`/prebook/${encodeURIComponent(movie.title)}`} className="w-full">
-            <Button 
-              className="w-full bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90 text-white font-semibold shadow-lg"
-              data-testid={`button-ai-prebook-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
-              onClick={handleSmartBookClick}
-            >
-              ✨ SmartBook
-            </Button>
-          </Link>
+          <Button 
+            className="w-full bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90 text-white font-semibold shadow-lg"
+            data-testid={`button-ai-prebook-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
+            onClick={handleSmartBookClick}
+          >
+            ✨ SmartBook
+          </Button>
         </div>
       </div>
     </div>

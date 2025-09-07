@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import MovieCard from "@/components/MovieCard";
 import { MOVIES } from "@/data/movies";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,19 @@ import { Sparkles, Zap, Clock, MapPin, Star, Users } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
+  // Restore scroll position when returning from booking form
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('homeScrollPosition');
+    if (savedScrollPosition) {
+      const scrollY = parseInt(savedScrollPosition, 10);
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollY);
+        // Clear the saved position after restoring
+        sessionStorage.removeItem('homeScrollPosition');
+      });
+    }
+  }, []);
   const scrollToMovies = () => {
     const moviesSection = document.getElementById('movies-section');
     if (moviesSection) {

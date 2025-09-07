@@ -22,7 +22,6 @@ export default function PreBookForm() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [isAnimating, setIsAnimating] = useState(true);
 
   // Helper function to convert 24-hour format to 12-hour format
   const formatTo12Hour = (hour: number): string => {
@@ -35,29 +34,9 @@ export default function PreBookForm() {
   const movieTitle = params?.movieTitle ? decodeURIComponent(params.movieTitle) : "";
   const movie = MOVIES.find(m => m.title === movieTitle);
   
-  // Handle shared element animation
+  // Ensure page starts at top when navigated to
   useEffect(() => {
-    const sharedMovieData = sessionStorage.getItem('sharedElementMovie');
-    if (sharedMovieData) {
-      const movieData = JSON.parse(sharedMovieData);
-      if (movieData.title === movieTitle) {
-        // Start with entrance animation
-        setTimeout(() => {
-          const posterElement = document.querySelector('[data-shared-poster]') as HTMLElement;
-          if (posterElement) {
-            posterElement.classList.add('shared-element-enter');
-            setTimeout(() => {
-              posterElement.classList.remove('shared-element-enter');
-              setIsAnimating(false);
-            }, 800);
-          }
-        }, 100);
-      }
-      // Clean up session storage
-      sessionStorage.removeItem('sharedElementMovie');
-    } else {
-      setIsAnimating(false);
-    }
+    window.scrollTo(0, 0);
   }, [movieTitle]);
 
   const [selectedTheaters, setSelectedTheaters] = useState<string[]>([]);
@@ -323,11 +302,8 @@ export default function PreBookForm() {
           <img 
             src={movie.poster} 
             alt={movie.title}
-            className={`w-20 h-28 object-cover rounded-lg transition-all duration-800 ease-out ${
-              isAnimating ? 'transform scale-200 opacity-0 rotate-12' : 'transform scale-100 opacity-100 rotate-0'
-            }`}
+            className="w-20 h-28 object-cover rounded-lg"
             data-testid="selected-movie-poster"
-            data-shared-poster="true"
           />
           <div>
             <h1 className="text-2xl font-bold" data-testid="selected-movie-title">
