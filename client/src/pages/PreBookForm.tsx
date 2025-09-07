@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, MapPinOff, ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import TheaterSelector from "@/components/TheaterSelector";
 import CitySelector from "@/components/CitySelector";
@@ -42,8 +42,6 @@ export default function PreBookForm() {
   const [timeRange, setTimeRange] = useState([9, 21]); // 9 AM to 9 PM
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [upiId, setUpiId] = useState("");
-  const [userLocation, setUserLocation] = useState<any>(null);
-  const [locationPermission, setLocationPermission] = useState<string>("pending");
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
@@ -93,28 +91,7 @@ export default function PreBookForm() {
   const preBookingFee = getTotalPreBookingFee();
   const totalPreBookingFee = ticketCount * preBookingFee;
 
-  // Request location permission on component mount
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            city: "Current Location" // In real app, reverse geocode to get city
-          });
-          setLocationPermission("granted");
-        },
-        (error) => {
-          console.error("Location error:", error);
-          setLocationPermission("denied");
-        },
-        { timeout: 10000 }
-      );
-    } else {
-      setLocationPermission("not_supported");
-    }
-  }, []);
+
 
   // Handle scroll detection to auto-collapse breakdown
   useEffect(() => {
@@ -157,33 +134,7 @@ export default function PreBookForm() {
     };
   }, [showBreakdown]);
 
-  const requestLocationPermission = () => {
-    if (navigator.geolocation) {
-      setLocationPermission("pending");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            city: "Current Location"
-          });
-          setLocationPermission("granted");
-          toast({
-            title: "Location Access Granted",
-            description: "We can now show nearby theaters first!",
-          });
-        },
-        (error) => {
-          setLocationPermission("denied");
-          toast({
-            title: "Location Access Denied",
-            description: "You can still select theaters manually.",
-            variant: "destructive",
-          });
-        }
-      );
-    }
-  };
+
 
   const createPreBookingMutation = useMutation({
     mutationFn: async (data: InsertPreBooking) => {
@@ -284,7 +235,6 @@ export default function PreBookForm() {
         formattedTimeRange: `${timeRange[0].toString().padStart(2, '0')}:00 - ${timeRange[1].toString().padStart(2, '0')}:00`,
       selectedDates,
       upiId: upiId.trim(),
-      userLocation,
     });
 
     try {
@@ -396,56 +346,19 @@ export default function PreBookForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium mb-4">Seat Row Preference</label>
-            <Select value={seatRowPreference} onValueChange={setSeatRowPreference}>
-              <SelectTrigger data-testid="seat-row-selector">
-                <SelectValue placeholder="Select row preference" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="front">Front Rows (A-E)</SelectItem>
-                <SelectItem value="middle">Middle Rows (F-L)</SelectItem>
-                <SelectItem value="back">Back Rows (M-Z)</SelectItem>
-                <SelectItem value="any">Any Row</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-4">Location for Nearby Theaters</label>
-            <div className="h-10 flex items-center justify-between p-3 border border-border rounded-lg">
-              <div className="flex items-center space-x-2">
-                {locationPermission === "granted" ? (
-                  <MapPin className="h-5 w-5 text-green-400" />
-                ) : (
-                  <MapPinOff className="h-5 w-5 text-muted-foreground" />
-                )}
-                <span className="text-sm">
-                  {locationPermission === "granted" && "Location Access Granted"}
-                  {locationPermission === "denied" && "Location Access Denied"}
-                  {locationPermission === "pending" && "Requesting Location..."}
-                  {locationPermission === "not_supported" && "Location Not Supported"}
-                </span>
-              </div>
-              {locationPermission === "denied" && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={requestLocationPermission}
-                  data-testid="button-request-location"
-                >
-                  Enable
-                </Button>
-              )}
-            </div>
-            {locationPermission === "granted" && (
-              <p className="text-xs text-muted-foreground mt-2">
-                We'll prioritize theaters near your location
-              </p>
-            )}
-          </div>
+        <div>
+          <label className="block text-sm font-medium mb-4">Seat Row Preference</label>
+          <Select value={seatRowPreference} onValueChange={setSeatRowPreference}>
+            <SelectTrigger data-testid="seat-row-selector">
+              <SelectValue placeholder="Select row preference" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="front">Front Rows (A-E)</SelectItem>
+              <SelectItem value="middle">Middle Rows (F-L)</SelectItem>
+              <SelectItem value="back">Back Rows (M-Z)</SelectItem>
+              <SelectItem value="any">Any Row</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-4">
