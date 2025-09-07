@@ -5,6 +5,13 @@ import { Sparkles, Zap, Clock, MapPin, Star, Users } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
+  const scrollToMovies = () => {
+    const moviesSection = document.getElementById('movies-section');
+    if (moviesSection) {
+      moviesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -24,7 +31,11 @@ export default function Home() {
             Let AI handle the rush! Pre-book your favorite movies and get the best seats automatically when bookings open.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+            <Button 
+              size="lg" 
+              className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
+              onClick={scrollToMovies}
+            >
               <Zap className="w-5 h-5 mr-2" />
               Try AI Pre-Book
             </Button>
@@ -103,7 +114,7 @@ export default function Home() {
       </div>
 
       {/* Movies Section */}
-      <div className="py-16 bg-white">
+      <div id="movies-section" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4" data-testid="page-title">Upcoming Movies</h2>
