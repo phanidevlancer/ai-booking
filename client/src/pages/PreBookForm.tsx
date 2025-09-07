@@ -35,6 +35,51 @@ export default function PreBookForm() {
   const [userLocation, setUserLocation] = useState<any>(null);
   const [locationPermission, setLocationPermission] = useState<string>("pending");
 
+  // Calculate dynamic pre-booking fee based on movie-specific pricing configuration
+  const calculatePreBookingFee = (dateStr: string): number => {
+    if (!movie) return 0;
+    
+    const selectedDate = new Date(dateStr + 'T00:00:00');
+    const normalizedReleaseDate = new Date(movie.releaseDate + ' 00:00:00');
+    
+    const daysDiff = Math.floor((selectedDate.getTime() - normalizedReleaseDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Use movie-specific pricing configuration
+    const pricingConfig = movie.pricingConfig;
+    
+    // Find the appropriate price based on days difference
+    if (pricingConfig[daysDiff] !== undefined) {
+      return pricingConfig[daysDiff];
+    }
+    
+    // If exact day not found, use the highest available day that's <= daysDiff
+    const availableDays = Object.keys(pricingConfig).map(Number).sort((a, b) => b - a);
+    for (const day of availableDays) {
+      if (daysDiff >= day) {
+        return pricingConfig[day];
+      }
+    }
+    
+    // Fallback to day 0 pricing if no match found
+    return pricingConfig[0] || 50;
+  };
+
+  // Calculate total pre-booking fee for all selected dates
+  const getTotalPreBookingFee = () => {
+    if (!movie || selectedDates.length === 0) return 50; // Default minimum fee
+    
+    let maxFee = 0;
+    selectedDates.forEach(dateStr => {
+      const fee = calculatePreBookingFee(dateStr);
+      maxFee = Math.max(maxFee, fee);
+    });
+    
+    return maxFee;
+  };
+
+  const preBookingFee = getTotalPreBookingFee();
+  const totalPreBookingFee = ticketCount * preBookingFee;
+
   // Request location permission on component mount
   useEffect(() => {
     if (navigator.geolocation) {
@@ -309,39 +354,37 @@ export default function PreBookForm() {
 
           <div>
             <label className="block text-sm font-medium mb-4">Location for Nearby Theaters</label>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 border border-border rounded-lg">
-                <div className="flex items-center space-x-2">
-                  {locationPermission === "granted" ? (
-                    <MapPin className="h-5 w-5 text-green-400" />
-                  ) : (
-                    <MapPinOff className="h-5 w-5 text-muted-foreground" />
-                  )}
-                  <span className="text-sm">
-                    {locationPermission === "granted" && "Location Access Granted"}
-                    {locationPermission === "denied" && "Location Access Denied"}
-                    {locationPermission === "pending" && "Requesting Location..."}
-                    {locationPermission === "not_supported" && "Location Not Supported"}
-                  </span>
-                </div>
-                {locationPermission === "denied" && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={requestLocationPermission}
-                    data-testid="button-request-location"
-                  >
-                    Enable
-                  </Button>
+            <div className="h-10 flex items-center justify-between p-3 border border-border rounded-lg">
+              <div className="flex items-center space-x-2">
+                {locationPermission === "granted" ? (
+                  <MapPin className="h-5 w-5 text-green-400" />
+                ) : (
+                  <MapPinOff className="h-5 w-5 text-muted-foreground" />
                 )}
+                <span className="text-sm">
+                  {locationPermission === "granted" && "Location Access Granted"}
+                  {locationPermission === "denied" && "Location Access Denied"}
+                  {locationPermission === "pending" && "Requesting Location..."}
+                  {locationPermission === "not_supported" && "Location Not Supported"}
+                </span>
               </div>
-              {locationPermission === "granted" && (
-                <p className="text-xs text-muted-foreground">
-                  We'll prioritize theaters near your location
-                </p>
+              {locationPermission === "denied" && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={requestLocationPermission}
+                  data-testid="button-request-location"
+                >
+                  Enable
+                </Button>
               )}
             </div>
+            {locationPermission === "granted" && (
+              <p className="text-xs text-muted-foreground mt-2">
+                We'll prioritize theaters near your location
+              </p>
+            )}
           </div>
         </div>
 
@@ -353,6 +396,8 @@ export default function PreBookForm() {
         <DateSelector
           selectedDates={selectedDates}
           onToggleDate={handleToggleDate}
+          movieReleaseDate={movie?.releaseDate}
+          movie={movie}
         />
 
         <div>
@@ -376,7 +421,7 @@ export default function PreBookForm() {
           >
             {createPreBookingMutation.isPending 
               ? "Processing..." 
-              : `Pay Pre-Booking Fee - ₹${ticketCount * 50}`
+              : `Pay Pre-Booking Fee - ₹${totalPreBookingFee}`
             }
           </Button>
         </div>

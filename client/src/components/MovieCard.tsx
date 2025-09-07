@@ -37,7 +37,10 @@ export default function MovieCard({ movie }: MovieCardProps) {
         <h3 className="font-bold text-xl mb-2" data-testid={`movie-title-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}>
           {movie.title}
         </h3>
-        <p className="text-gray-600 text-sm mb-6 font-medium">{movie.genre}</p>
+        <div className="mb-4">
+          <p className="text-gray-600 text-sm font-medium">{movie.genre}</p>
+          <p className="text-primary text-sm font-semibold mt-1">Release: {movie.releaseDate}</p>
+        </div>
         <div className="flex flex-col space-y-3">
           <Button 
             variant="outline" 

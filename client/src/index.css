@@ -116,6 +116,10 @@
   color: white;
 }
 
+.calendar-day.selected .text-green-600 {
+  color: white !important;
+}
+
 .theater-option {
   transition: all 0.2s ease-in-out;
 }
