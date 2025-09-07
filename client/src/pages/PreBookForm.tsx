@@ -22,6 +22,14 @@ export default function PreBookForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  // Helper function to convert 24-hour format to 12-hour format
+  const formatTo12Hour = (hour: number): string => {
+    if (hour === 0) return "12:00 AM";
+    if (hour === 12) return "12:00 PM";
+    if (hour < 12) return `${hour}:00 AM`;
+    return `${hour - 12}:00 PM`;
+  };
+
   const movieTitle = params?.movieTitle ? decodeURIComponent(params.movieTitle) : "";
   const movie = MOVIES.find(m => m.title === movieTitle);
 
@@ -446,7 +454,7 @@ export default function PreBookForm() {
             <div className="text-center mt-3">
               <span className="text-sm text-muted-foreground">Selected: </span>
               <span className="font-medium" data-testid="time-range-display">
-                {timeRange[0].toString().padStart(2, '0')}:00 - {timeRange[1].toString().padStart(2, '0')}:00
+                {formatTo12Hour(timeRange[0])} - {formatTo12Hour(timeRange[1])}
               </span>
             </div>
           </div>
@@ -499,7 +507,7 @@ export default function PreBookForm() {
                   </div>
                   <div>
                     <span className="text-muted-foreground">Time:</span>
-                    <span className="ml-2 font-medium">{timeRange[0]}:00 - {timeRange[1]}:00</span>
+                    <span className="ml-2 font-medium">{formatTo12Hour(timeRange[0])} - {formatTo12Hour(timeRange[1])}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
