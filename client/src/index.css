@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent layout shift when scrollbar appears/disappears */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Fallback for browsers that don't support scrollbar-gutter */
+body {
+  overflow-y: scroll;
+}
+
 :root {
   --background: hsl(210 100% 98%);
   --foreground: hsl(220 15% 15%);

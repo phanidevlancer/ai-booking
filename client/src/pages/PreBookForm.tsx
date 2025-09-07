@@ -409,7 +409,7 @@ export default function PreBookForm() {
       </form>
       
       {/* Sticky Pre-Pay Button with Breakdown */}
-      <div ref={stickyContainerRef} className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
+      <div ref={stickyContainerRef} className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-[100]">
         <div className="max-w-4xl mx-auto">
           {/* Collapsible Breakdown Section */}
           <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
