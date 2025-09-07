@@ -305,7 +305,7 @@ export default function PreBookForm() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-card rounded-lg p-6 space-y-8">
+      <form id="prebook-form" onSubmit={handleSubmit} className="bg-card rounded-lg p-6 space-y-8">
         <TheaterSelector
           selectedTheaters={selectedTheaters}
           onToggleTheater={handleToggleTheater}
@@ -412,10 +412,15 @@ export default function PreBookForm() {
           />
         </div>
 
-        <div className="pt-4">
+      </form>
+      
+      {/* Sticky Pre-Pay Button */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-50">
+        <div className="max-w-4xl mx-auto">
           <Button 
             type="submit"
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg font-semibold"
+            form="prebook-form"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg font-semibold shadow-lg"
             disabled={createPreBookingMutation.isPending}
             data-testid="button-submit-prebook"
           >
@@ -425,7 +430,10 @@ export default function PreBookForm() {
             }
           </Button>
         </div>
-      </form>
+      </div>
+      
+      {/* Bottom padding to prevent content from being hidden behind sticky button */}
+      <div className="h-20"></div>
     </div>
   );
 }
