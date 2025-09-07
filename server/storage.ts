@@ -45,17 +45,41 @@ export class MemStorage implements IStorage {
   }
 
   async createPreBooking(insertPreBooking: InsertPreBooking): Promise<PreBooking> {
-    const id = randomUUID();
-    const preBooking: PreBooking = {
-      ...insertPreBooking,
-      id,
-      status: "pending",
-      createdAt: new Date(),
-      matchDetails: null,
-      userLocation: insertPreBooking.userLocation || null,
-    };
-    this.preBookings.set(id, preBooking);
-    return preBooking;
+    try {
+      console.log("Creating pre-booking with data:", JSON.stringify(insertPreBooking, null, 2));
+      
+      // Validate required fields
+      if (!insertPreBooking.movieTitle) throw new Error("movieTitle is required");
+      if (!insertPreBooking.moviePoster) throw new Error("moviePoster is required");
+      if (!insertPreBooking.ticketCount) throw new Error("ticketCount is required");
+      if (!insertPreBooking.selectedTheaters || !Array.isArray(insertPreBooking.selectedTheaters) || insertPreBooking.selectedTheaters.length === 0) {
+        throw new Error("selectedTheaters must be a non-empty array");
+      }
+      if (!insertPreBooking.seatPreference) throw new Error("seatPreference is required");
+      if (!insertPreBooking.seatRowPreference) throw new Error("seatRowPreference is required");
+      if (!insertPreBooking.timeRange) throw new Error("timeRange is required");
+      if (!insertPreBooking.selectedDates || !Array.isArray(insertPreBooking.selectedDates) || insertPreBooking.selectedDates.length === 0) {
+        throw new Error("selectedDates must be a non-empty array");
+      }
+      if (!insertPreBooking.upiId) throw new Error("upiId is required");
+      
+      const id = randomUUID();
+      const preBooking: PreBooking = {
+        ...insertPreBooking,
+        id,
+        status: "pending",
+        createdAt: new Date(),
+        matchDetails: null,
+        userLocation: insertPreBooking.userLocation || null,
+      };
+      
+      console.log("Saving pre-booking:", JSON.stringify(preBooking, null, 2));
+      this.preBookings.set(id, preBooking);
+      return preBooking;
+    } catch (error) {
+      console.error("Error in createPreBooking:", error);
+      throw error;
+    }
   }
 
   async getPreBookings(): Promise<PreBooking[]> {

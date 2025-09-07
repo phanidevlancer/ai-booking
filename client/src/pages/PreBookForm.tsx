@@ -169,24 +169,57 @@ export default function PreBookForm() {
 
     const formatTime = (value: number) => {
       const hour = Math.floor(value);
-      const minute = (value % 1) * 60;
+      const minute = Math.round((value % 1) * 60);
       return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
     };
 
-    const preBookingData: InsertPreBooking = {
+    // Log the data being submitted
+    console.log("Submitting pre-booking with:", {
       movieTitle: movie.title,
       moviePoster: movie.poster,
       ticketCount,
       selectedTheaters,
       seatPreference,
       seatRowPreference,
-      timeRange: formatTime(timeRange),
+      timeRange,
+      formattedTimeRange: formatTime(timeRange),
       selectedDates,
       upiId: upiId.trim(),
       userLocation,
-    };
+    });
 
-    createPreBookingMutation.mutate(preBookingData);
+    try {
+      // Ensure all required fields are present and properly formatted
+      const preBookingData: InsertPreBooking = {
+        movieTitle: movie.title,
+        moviePoster: movie.poster,
+        ticketCount,
+        selectedTheaters: selectedTheaters.length > 0 ? selectedTheaters : [],
+        seatPreference,
+        seatRowPreference,
+        timeRange: formatTime(timeRange),
+        selectedDates: selectedDates.length > 0 ? selectedDates : [],
+        upiId: upiId.trim(),
+        userLocation,
+      };
+
+      // Additional validation
+      if (!preBookingData.movieTitle) throw new Error("Movie title is required");
+      if (!preBookingData.moviePoster) throw new Error("Movie poster is required");
+      if (!preBookingData.selectedTheaters.length) throw new Error("Please select at least one theater");
+      if (!preBookingData.selectedDates.length) throw new Error("Please select at least one date");
+      if (!preBookingData.upiId) throw new Error("UPI ID is required");
+
+      console.log("Final pre-booking data being sent to API:", JSON.stringify(preBookingData, null, 2));
+      createPreBookingMutation.mutate(preBookingData);
+    } catch (error) {
+      console.error("Error preparing pre-booking data:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to prepare booking data",
+        variant: "destructive",
+      });
+    }
   };
 
   if (!movie) {

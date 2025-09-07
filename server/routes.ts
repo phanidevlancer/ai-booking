@@ -17,11 +17,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create a new pre-booking
   app.post("/api/prebookings", async (req, res) => {
     try {
+      console.log("Received pre-booking request:", req.body);
       const data = insertPreBookingSchema.parse(req.body);
+      console.log("Parsed data:", data);
       const preBooking = await storage.createPreBooking(data);
+      console.log("Created pre-booking:", preBooking);
       res.json(preBooking);
     } catch (error) {
-      res.status(400).json({ message: "Invalid pre-booking data" });
+      console.error("Pre-booking creation error:", error);
+      res.status(400).json({ message: "Invalid pre-booking data", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
