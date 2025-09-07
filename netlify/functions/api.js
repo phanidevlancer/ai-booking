@@ -18,6 +18,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Initialize database connection
+console.log('Initializing database connection for Netlify function...');
+
 // Add error handling middleware
 app.use((err, req, res, next) => {
   console.error('API Error:', err);

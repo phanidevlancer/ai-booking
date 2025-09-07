@@ -5,15 +5,18 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && npm run build:functions",
+    "build": "npm run build:schema && vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && npm run build:functions && node scripts/copy-migrations.js",
     "build:functions": "esbuild netlify/functions/*.js --platform=node --packages=external --bundle --format=esm --outdir=.netlify/functions/",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "netlify:dev": "netlify dev",
     "db:init": "node scripts/init-db.js",
-    "db:migrate": "node server/migrate.js",
-    "netlify:build": "npm run db:migrate && npm run build"
+    "build:schema": "esbuild shared/schema.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/shared",
+    "db:check": "node server/check-db-connection.js",
+    "db:migrate": "npm run build:schema && npm run db:check && node server/migrate.js",
+    "db:test": "node server/test-db-setup.js",
+    "netlify:build": "npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

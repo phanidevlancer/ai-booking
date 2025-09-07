@@ -57,17 +57,52 @@ If you encounter issues with the pre-booking functionality:
 3. Make sure the `NETLIFY` environment variable is set to `true`
 4. Check that the database migrations have run successfully
 
-## Database Migrations
+## Database Migration
 
-The application is configured to run database migrations automatically during the build process. If you need to run migrations manually:
+The application uses Neon PostgreSQL for data storage. Due to Netlify build constraints, you should run migrations after deployment.
+
+### Running Migrations After Deployment
+
+**Option 1: Using the Setup-DB Function (Recommended)**
+
+We've created a dedicated Netlify function to set up the database. After deployment, simply call this function:
+
+```
+https://your-netlify-site.netlify.app/.netlify/functions/setup-db
+```
+
+You can call this URL in your browser or using curl:
 
 ```bash
-# Set your DATABASE_URL environment variable
-export DATABASE_URL=postgres://username:password@endpoint/database
-
-# Run migrations
-npm run db:migrate
+curl https://your-netlify-site.netlify.app/.netlify/functions/setup-db
 ```
+
+**Option 2: Using Netlify CLI**
+
+1. Install Netlify CLI if you haven't already:
+   ```bash
+   npm install -g netlify-cli
+   ```
+
+2. Login to Netlify:
+   ```bash
+   netlify login
+   ```
+
+3. Run migrations using environment variables from your Netlify site:
+   ```bash
+   netlify env:run --scope=production -- npm run db:migrate
+   ```
+
+**Option 3: Running Locally**
+
+Run migrations locally with your production database URL:
+
+```bash
+DATABASE_URL=your_production_database_url npm run db:migrate
+```
+
+The migrations are defined in the `migrations` directory and will create all necessary tables in your database.
 
 ## Additional Resources
 

@@ -90,19 +90,45 @@ DATABASE_URL=your_production_db_url node scripts/init-db.js
 
 ## Step 5: Database Migrations
 
-Before deploying to Netlify, ensure your database schema is created. The project includes migration files in the `migrations` directory.
+Before your application can work properly, you need to run database migrations to create the necessary tables in your Neon PostgreSQL database.
 
-You can run migrations manually before deployment:
+**Important: Run Migrations After Deployment**
 
-```bash
-# Set your DATABASE_URL environment variable
-export DATABASE_URL=postgres://username:password@endpoint/database
+**Option 1: Using the Setup-DB Function (Recommended)**
 
-# Run migrations
-npm run db:migrate
+We've created a dedicated Netlify function to set up the database. After deployment, simply call this function:
+
+```
+https://your-netlify-site.netlify.app/.netlify/functions/setup-db
 ```
 
-Alternatively, the migrations will run automatically during the Netlify build process if you use the `netlify:build` script (configured in netlify.toml).
+You can call this URL in your browser or using curl:
+
+```bash
+curl https://your-netlify-site.netlify.app/.netlify/functions/setup-db
+```
+
+**Option 2: Using Netlify CLI**
+
+```bash
+# Install Netlify CLI if you haven't already
+npm install -g netlify-cli
+
+# Login to Netlify
+netlify login
+
+# Run migrations using environment variables from your Netlify site
+netlify env:run --scope=production -- npm run db:migrate
+```
+
+**Option 3: Running Locally**
+
+```bash
+# Set your production DATABASE_URL environment variable
+DATABASE_URL=your_production_database_url npm run db:migrate
+```
+
+This ensures your database schema is properly set up for your application.
 
 ## Step 5: Verify Your Deployment
 
