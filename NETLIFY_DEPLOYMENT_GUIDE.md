@@ -39,6 +39,7 @@ This guide provides step-by-step instructions for deploying your AIBookings appl
 5. Click "Show advanced" and add environment variables:
    - `NODE_ENV`: `production`
    - `DATABASE_URL`: Your Neon database connection string
+   - `NETLIFY`: `true`
 6. Click "Deploy site"
 
 ### Option B: Deploy via Netlify CLI
@@ -86,6 +87,22 @@ Alternatively, you can run it locally with your production database URL:
 ```bash
 DATABASE_URL=your_production_db_url node scripts/init-db.js
 ```
+
+## Step 5: Database Migrations
+
+Before deploying to Netlify, ensure your database schema is created. The project includes migration files in the `migrations` directory.
+
+You can run migrations manually before deployment:
+
+```bash
+# Set your DATABASE_URL environment variable
+export DATABASE_URL=postgres://username:password@endpoint/database
+
+# Run migrations
+npm run db:migrate
+```
+
+Alternatively, the migrations will run automatically during the Netlify build process if you use the `netlify:build` script (configured in netlify.toml).
 
 ## Step 5: Verify Your Deployment
 

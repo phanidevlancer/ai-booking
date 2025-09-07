@@ -11,7 +11,9 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "netlify:dev": "netlify dev",
-    "db:init": "node scripts/init-db.js"
+    "db:init": "node scripts/init-db.js",
+    "db:migrate": "node server/migrate.js",
+    "netlify:build": "npm run db:migrate && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

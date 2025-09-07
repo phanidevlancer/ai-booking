@@ -3,6 +3,9 @@ import serverless from 'serverless-http';
 import { registerRoutes } from '../../server/routes';
 import { storage } from '../../server/storage';
 
+// Set Netlify environment variable
+process.env.NETLIFY = 'true';
+
 const app = express();
 
 // Middleware
@@ -13,6 +16,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
+});
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error('API Error:', err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message || 'Something went wrong',
+  });
 });
 
 // CORS headers for Netlify Functions
