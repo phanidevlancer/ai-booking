@@ -124,7 +124,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold mb-2" data-testid="dashboard-title">
             My Pre-Bookings
           </h1>
-          <p className="text-muted-foreground">Track your AI pre-booking requests</p>
+          <p className="text-muted-foreground">Track your SmartBook pre-booking requests</p>
         </div>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 bg-card p-3 rounded-lg">

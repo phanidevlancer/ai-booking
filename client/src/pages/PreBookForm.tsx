@@ -144,7 +144,7 @@ export default function PreBookForm() {
     onSuccess: () => {
       toast({
         title: "Pre-booking submitted!",
-        description: "Your AI pre-booking request has been created successfully.",
+        description: "Your SmartBook pre-booking request has been created successfully.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/prebookings"] });
       setLocation("/confirmation");
@@ -304,7 +304,7 @@ export default function PreBookForm() {
             <h1 className="text-2xl font-bold" data-testid="selected-movie-title">
               {movie.title}
             </h1>
-            <p className="text-muted-foreground">AI Pre-Booking Form</p>
+            <p className="text-muted-foreground">SmartBook Pre-Booking Form</p>
           </div>
         </div>
       </div>

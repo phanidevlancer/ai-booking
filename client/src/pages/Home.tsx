@@ -37,7 +37,7 @@ export default function Home() {
               onClick={scrollToMovies}
             >
               <Zap className="w-5 h-5 mr-2" />
-              Try AI Pre-Book
+              Try SmartBook
             </Button>
             <Link href="/dashboard">
               <Button size="lg" variant="outline" className="border-white/50 bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg font-semibold transition-all duration-300">
@@ -76,7 +76,7 @@ export default function Home() {
       <div className="py-16 bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Why Choose AI Pre-Book?</h2>
+            <h2 className="text-4xl font-bold mb-4">Why Choose SmartBook?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Experience the future of movie booking with intelligent automation
             </p>

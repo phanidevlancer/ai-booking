@@ -54,7 +54,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
               className="w-full bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90 text-white font-semibold shadow-lg"
               data-testid={`button-ai-prebook-${movie.title.replace(/\s+/g, '-').toLowerCase()}`}
             >
-              ✨ AI Pre-Book
+              ✨ SmartBook
             </Button>
           </Link>
         </div>
